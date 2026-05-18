@@ -1,0 +1,10 @@
+# @dependency-start
+# responsibility Keeps local llama.cpp runtime artifacts out of git.
+# upstream design ../README.md defines the combined LocalLLM MCP container.
+# upstream design README.md documents llama.cpp local artifact layout.
+# downstream environment ../Dockerfile mounts GGUF models from /models.
+# @dependency-end
+
+cache/
+models/
+runtime/

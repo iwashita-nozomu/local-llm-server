@@ -1,0 +1,55 @@
+# @dependency-start
+# responsibility Defines local LLM model candidates for coding-agent experiments.
+# upstream design model-selection.md explains model selection rationale
+# downstream implementation ../../experiments/local-llm-agent/experimentcode.py records selected model metadata in run output
+# @dependency-end
+schema_version = 1
+
+[defaults]
+provider = "local-http"
+base_url_env = "LOCAL_LLM_BASE_URL"
+model_env = "LOCAL_LLM_MODEL"
+profile_env = "LOCAL_LLM_PROFILE"
+experiment_topic = "local-llm-agent"
+
+[[models]]
+id = "qwen3-4b-instruct-2507-llama-cpp"
+provider_model = "qwen3-4b-instruct-2507"
+role = "cpu-default"
+serving = "llama.cpp"
+notes = "Default this-PC profile: Qwen3 4B instruct GGUF through local llama-server on CPU."
+
+[[models]]
+id = "qwen3-8b-instruct-2507-llama-cpp"
+provider_model = "qwen3-8b-instruct-2507"
+role = "cpu-comparison"
+serving = "llama.cpp"
+notes = "Optional CPU comparison profile if the 4B profile is stable and latency is acceptable."
+
+[[models]]
+id = "qwen3-coder-480b-a35b"
+provider_model = "Qwen/Qwen3-Coder-480B-A35B-Instruct"
+role = "capability-target"
+serving = "vllm"
+notes = "Primary agentic coding target when large-model serving capacity exists."
+
+[[models]]
+id = "glm-4.5-air-fp8"
+provider_model = "zai-org/GLM-4.5-Air-FP8"
+role = "practical-large"
+serving = "vllm"
+notes = "Practical large local target with GLM tool and reasoning parser support."
+
+[[models]]
+id = "kimi-k2"
+provider_model = "moonshotai/Kimi-K2-Instruct"
+role = "comparison-target"
+serving = "vllm"
+notes = "Secondary open agentic model candidate for comparison runs."
+
+[[models]]
+id = "small-coder-smoke"
+provider_model = "Qwen/Qwen2.5-Coder-7B-Instruct"
+role = "smoke"
+serving = "vllm-or-ollama"
+notes = "Endpoint and harness smoke only; not a coding-agent quality target."
