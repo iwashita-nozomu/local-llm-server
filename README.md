@@ -5,6 +5,8 @@ responsibility Documents local LLM runtime configuration for coding-agent experi
 upstream design ../../docker/README.md docker runtime guidance
 downstream design model-selection.md local model selection rationale
 downstream implementation ../../experiments/local-llm-agent/experimentcode.py probes llama.cpp-compatible endpoints
+downstream implementation ../../tools/ci/check_fresh_clone.sh excludes model caches from clone overlays
+downstream environment ../../.dockerignore excludes local model artifacts from Docker build context
 downstream environment ../../docker/codex-container-profiles.toml forwards local LLM environment variables
 @dependency-end
 -->
@@ -150,6 +152,19 @@ experiments/report/<run_name>.md
 
 The repo-local shortlist lives in `models.toml`; the reasoning and hardware
 tiers live in `model-selection.md`.
+
+## Model Artifact Storage
+
+Keep GGUF and other model weight files outside repository copies. The canonical
+host cache for this repo is `.state/local-llm/models/`, mounted into the MCP
+container as `/models`. That cache is ignored by git, excluded from Docker build
+contexts, and excluded from fresh-clone/test overlays.
+
+Do not put model binaries under tracked experiment results or template fixture
+copies. Reports should record the model id, quantization, source URL or catalog
+entry, file size, checksum when available, and the cache path used for the run.
+If a container or test needs a model, download or mount it into the cache at
+runtime instead of copying it with the repo workspace.
 
 ## MCP Tool CLI
 
